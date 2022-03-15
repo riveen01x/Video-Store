@@ -1,0 +1,62 @@
+<%= form_with(model: video) do |f| %>
+  <% if video.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(video.errors.count, "error") %> prohibited this video from being saved:</h2>
+
+      <ul>
+        <% video.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= f.label :description %>
+    <%= f.rich_text_area :description %>
+  </div>
+
+  <div class="field">
+    <%= f.label :thumbnail %>
+    <%= f.file_field :thumbnail %>
+  </div>
+
+
+  <div class="field">
+    <%= f.collection_check_boxes(:genre_ids, Genre.all, :id, :name) %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :actors %>
+    <%= f.collection_select :actor_ids, Actor.order(:name), :id, :name, {}, { class: 'form-control select2', multiple: true } %>
+  </div>
+
+  <div class="field">
+    <%= f.label :rent_price %>
+    <%= f.number_field :rent_price, step: :any, :value => video.rent_price, :min => 1.0 %>
+  </div>
+<br/>
+<h5>Avaliable copies </h5>
+<div class="field">
+<table class="table table-borderless">
+  <tr class="table-light">
+    <td><strong>DVD copies: </strong><%= f.number_field :dvd_copies, step: :any, :value => video.dvd_copies, :min => 0 %></td>
+    <td><strong>VHS copies: </strong><%= f.number_field :vhs_copies, step: :any, :value => video.vhs_copies, :min => 0 %></td>
+    <td><strong>BLU-RAY copies: </strong><%= f.number_field :bluray_copies, step: :any, :value => video.bluray_copies, :min => 0 %></td>
+  </tr>
+</table>
+</div>
+<h5>Stock available </h5>
+<div class="field">
+  <%= f.number_field :stock, step: :any, :value => video.stock, :min => 0 %>
+</div>
+<br/>
+  <div class="actions">
+    <%= f.submit class: "btn btn-warning " %>
+  </div>
+<% end %>

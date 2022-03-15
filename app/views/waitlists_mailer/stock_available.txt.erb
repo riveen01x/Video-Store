@@ -1,0 +1,10 @@
+Hey, your waitlisted item iks available now
+===============================================
+
+         Item: 
+                    <%= @video.name %>
+                    <%= image_tag(@video.thumbnail, size: '290x265') if @video.thumbnail.present? %>
+	            price: <%= @video.rent_price*2 %>
+                    New available items stock: <%= @video.stock %>
+
+You can go shopping now!

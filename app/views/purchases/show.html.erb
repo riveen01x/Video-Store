@@ -1,0 +1,29 @@
+ <section id="content-receipt" class="clearfix">
+      <div id="receipt-container">
+        <div class="dotmatrix left"></div>
+        <div id="receipt-content">
+          <h4 id="receipt-title">Thank You!</h4>
+          <p><strong>RECEIPT</strong></p>
+          <div id="receipt-details" class="row clearfix">
+            <div class="col-sm-8 receipt-left">
+              <p><span class="font-weight-light">What you bought => </span>
+                  <% @cart_items.each do |item| %>
+	             <h6><strong class="font-weight-heavy"><%= item.video.name %> </strong></h6>
+                 <% end %>
+              </p>
+              <p><span class="font-weight-light">Amount => </span><strong class="font-weight-heavy">$<%= @sell_price %></strong></p>             
+            </div>
+          </div>
+
+<a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Download!</a><br/>
+
+          <button type="button" class="btn btn-success btn-xs">DOWNLOAD</button>
+          <footer id="receipt-footer">
+            <small>Your purchase is complete. We hope you enjoy it!</small>
+          </footer>
+        </div>
+        <div class="dotmatrix right"></div>
+      </div>
+      <div id="receipt-shadow"></div>
+    </section>
+

@@ -1,0 +1,28 @@
+
+<% @rent_items.each do |item| %>
+	
+	<h3><%= link_to item.video.name, item.video %></h3>
+         <div>
+          <%= image_tag(item.video.thumbnail, size: '180x155') if item.video.thumbnail.present? %>
+        </div>
+	<h5>Rent Price: $<%= item.unit_price %></h5>
+	<h5>Copy Type: <%= item.category.name %></h5>
+        <h5>Qty: <%= item.copies.to_i %></h5>
+        <h5>Rented at <%= item.rented_at.strftime('%m-%d-%Y') %></h5>
+	<h5><% item.rent_id %></h5>
+
+        <small><h4><strong>Subtotal: </strong>$<%= item.total %></h4></small>
+
+	<%= form_for item, remote: true do |f| %>
+		<%= link_to "Remove Item", rent_item_path(item), method: :delete, remote: true, class: "btn btn-outline-danger btn-sm" %>
+	<% end %>
+
+	<br/><hr />
+
+<% end %>
+<br/>
+<div> 
+  <%= link_to 'Empty rent', rentals_list_destroy_path, method: :delete, data: { confirm: "Are you sure? " }, class: "btn " %>
+</div><br/>
+<h3>Total Amount: <strong>$<%= @total_amt %></strong></h3>
+<h3><% current_customer.id %></h3>

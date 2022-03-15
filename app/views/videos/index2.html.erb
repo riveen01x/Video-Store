@@ -1,0 +1,42 @@
+
+<h1>Videos</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th rowspan="2">id</th>
+      <th rowspan="2">Name</th>
+      <th rowspan="2">Rent Price</th>
+      <th rowspan="2">Available stock</th>
+      <th colspan="3">Copies available</th>
+    </tr>
+   <tr>
+      <th>DVD</th>
+      <th>VHS</th>
+      <th>BLU-RAY</th>
+
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @videos.each do |video| %>
+        <tr>
+          <td><%= video.id %></td>
+          <td><%= link_to video.name, video %></td>
+          <td>$<%= video.rent_price %></td>
+          <% if video.stock == 0 %>
+            <td><small><strong>Out of stock</strong></small></td>
+          <% else %>
+            <td><%= video.stock %></td>
+          <% end %>
+          <td><%= link_to video.dvd_copies, edit_video_path(video) %></td>
+          <td><%= link_to video.vhs_copies, edit_video_path(video) %></td>
+          <td><%= link_to video.bluray_copies, edit_video_path(video) %></td>
+        </tr>
+    <% end %>
+  </tbody>
+</table>
+<%# link_to 'Export ~>', users_path(format: :xlsx) %>
+<nav>
+<br/>
+<%= link_to 'New Video', new_video_path %>

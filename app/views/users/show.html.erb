@@ -1,0 +1,38 @@
+
+
+<p>
+  <strong>Joined on:</strong>
+  <%= @joined_on %>
+</p>
+
+<p>
+  <strong>Last logged in on:</strong>
+  <%= @last_login %>
+</p>
+
+<p>
+  <strong>No. times logged in:</strong>
+  <%= @user.sign_in_count %>
+</p>
+
+
+
+<p>
+  <strong>Full Name:</strong>
+  <%= @user.first_name + ' ' + @user.last_name %>
+</p>
+
+<p>
+  <strong>Role:</strong>
+  <%= @user.role.name %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @user.email %>
+</p>
+
+<%= link_to 'Edit', edit_user_path(@user) %> 
+<%= link_to 'Delete', @user, method: :delete, data: { confirm: 'Are you sure?' } %>
+<br/><br/>
+<%= link_to 'Back', users_path %>

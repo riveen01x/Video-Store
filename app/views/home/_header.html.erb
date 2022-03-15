@@ -1,0 +1,103 @@
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-custom">
+     <%= link_to 'Store', root_path, class: "navbar-brand" %>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav">
+
+        <li class="nav-item">
+            <% link_to 'About Me', root_path, class: "nav-link" %>
+        </li>
+
+        <% if cart_has_items %>
+          <%= link_to cart_path(@cart), class: "navbar-item button is-warning" do %>
+            <span class="icon is-small">
+              <i class="fa fa-shopping-cart"></i>
+            </span>
+            <span>Cart
+              <%= cart_count_over_one %>
+            </span>
+          <% end %>
+         <% end %>
+
+        <% if customer_signed_in? %>
+
+              <span class="navbar-text">
+		   Signed in as <%= current_customer.email %>.  Not you?<br/>
+	      </span>
+
+              <li class="nav-item">
+                 <%= link_to "Edit Profile", edit_customer_registration_path, class: "nav-link" %>
+              </li>
+
+              <li class="nav-item">
+		<div id="rental_list">
+  		    <%= render 'rentals_list/rentals_list' %>
+		</div>
+              </li>
+              <li class="nav-item">
+		<div>
+  		    <%= render 'cart_list/cart_list' %>
+		</div>
+              </li>
+
+
+            <li class="nav-item">
+               <%= link_to "Sign Out", destroy_customer_session_path, method: :delete, class: "nav-link" %>
+              </li>
+</ul>
+
+<ul class="navbar-nav">
+        <% elsif user_signed_in? %>
+
+		    <span class="navbar-text">
+		        Signed in as <%= current_user.email %>.  Not you?<br/>
+		    </span>
+
+		    <li class="nav-item">
+		         <%= link_to "My Profile", users_edit_profile_path, class: "nav-link" %>
+		    </li>
+
+
+		    <li class="nav-item">
+		         <%= link_to "Sign out",  destroy_user_session_path, method: :delete, class: "nav-link" %>
+		    </li>
+
+         <% else %> 
+              <li class="nav-item">
+		<%= link_to "Sign Up", new_customer_registration_path, class: "nav-link" %> 
+              </li>
+
+              <li class="nav-item">
+          	<%= link_to "Sign In", new_customer_session_path, class: "nav-link" %>
+              </li>
+        <% end %>
+
+      </ul>
+  </div> 
+  <% if @current_user && @current_user.admin? || @current_user && @current_user.super_user? %>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Available
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <%= link_to "Videos", videos_path, class: "nav-link dropdown-item" %>
+          <%= link_to "Users", users_path, class: "nav-link dropdown-item" %>                
+          <%= link_to "Roles", roles_path, class: "nav-link dropdown-item" %>
+        </div>
+     </li>
+   <% elsif customer_signed_in? %>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+           <strong> My Account </strong>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <%= link_to "Orders", purchases_previous_purchases_path, class: "nav-link dropdown-item" %>
+          <%= link_to "Cart", videos_cart_path, class: "nav-link dropdown-item" %>                
+          <%= link_to "Whishlist", '#', class: "nav-link dropdown-item" %>
+        </div>
+     </li>
+   <% end %>
+</nav>

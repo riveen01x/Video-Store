@@ -1,0 +1,14 @@
+
+
+<h1>Actors</h1>
+
+<div> 
+ <ul>
+  <%= render @actors %>
+ </ul>
+
+<br>
+<% if current_user && current_user.admin? %>
+  <%= link_to 'New Actor', new_actor_path %>
+<% end %>
+</div>

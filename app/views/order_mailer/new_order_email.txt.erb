@@ -1,0 +1,17 @@
+Hey, this is your order!
+===============================================
+Items you ordered:-
+
+Thank You!
+          RECEIPT
+         What you bought => 
+                  <% @cart_items.each do |item| %>
+	            <%= item.video.name %>
+                    price: <%= item.unit_price %>
+                    Qty: <%= item.quantity %> 
+                    Item total: <%= item.total %>
+                 <% end %>
+
+               Full total: <%= @sell_price %>
+
+Your purchase is complete. We hope you enjoy it!

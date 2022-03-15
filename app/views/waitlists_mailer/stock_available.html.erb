@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+   <section id="content-receipt" class="clearfix">
+      <div id="receipt-container">
+        <div class="dotmatrix left"></div>
+        <div id="receipt-content">
+          <h4 id="receipt-title">Hey, your waitlisted item iks available now</h4>
+            <br/>===============================================<br/>
+
+          <div id="receipt-details" class="row clearfix">
+            <div class="col-sm-8 receipt-left">
+              <p><span class="font-weight-light">Item: </span>
+                    <h4><strong class="font-weight-heavy"><%= @video.name %></strong></h4>
+                    <div>
+                      <%= image_tag(@video.thumbnail, size: '290x265') if @video.thumbnail.present? %>
+                     </div>
+                    <h6><strong class="font-weight-heavy">price: <%= @video.rent_price*2 %></strong></h6>
+                    <h6><strong class="font-weight-heavy">New available items stock: <%= @video.stock %></strong></h6> 
+                    <hr/><br/>
+              </p>          
+            </div>
+          </div>
+          <footer id="receipt-footer">
+            <small>You can go shopping now!</small>
+          </footer>
+        </div>
+        <div class="dotmatrix right"></div>
+      </div>
+      <div id="receipt-shadow"></div>
+    </section>
+
+  </body>
+</html>
+
+

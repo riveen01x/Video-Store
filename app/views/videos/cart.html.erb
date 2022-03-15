@@ -1,0 +1,23 @@
+<h1>CART</h1>
+
+
+<% if current_customer %>
+    <summary>Shopping Cart Items</summary>
+    <% if @cart.empty?%>
+      <p>No items in cart.</p>
+    <% else %>
+     <ul>
+      <% @cart.each do |video| %>
+       <h2><%= video.name %></h2>
+       <%= image_tag(video.thumbnail, size: '180x155', class: "img-responsive") if video.thumbnail.present? %></li><br/>
+<div class="form-group col-md-2"><br/>
+Qty: <%= number_field_tag 'quantity', nil, min: 1, max: 10, value: 1, class: "form-control" %>
+</div><br/><br/>
+<h4>Price: <%= video.rent_price*2 %></h4><br/>
+<%= link_to 'Remove from cart', remove_from_cart_path(video), method: :delete %>
+      <% end %>
+     </ul>
+   <%= button_to 'Clear cart', videos_clear_cart_path %>
+    <% end %>
+<% end %>
+

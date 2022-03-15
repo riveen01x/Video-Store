@@ -1,0 +1,9 @@
+<% if current_user && current_user.admin? %>
+	<li class="category-link">
+	 <%= link_to actor do %>
+	   <span class="badge bg-light"><%= actor.name %></span>
+	 <% end %>
+	</li>
+<% else %>
+	   <span class="badge bg-light"><%= actor.name %></span>
+<% end %>

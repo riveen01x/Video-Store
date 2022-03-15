@@ -1,0 +1,2 @@
+module RentalsListHelper
+end

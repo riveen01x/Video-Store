@@ -1,0 +1,12 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+
+# add this later ---> one: name: MyString, description: MyText, rented_date:, user_id: one
+
+one:
+  name: MyString
+  user_id: one
+
+two:
+  name: MyString
+  user_id: two

@@ -1,0 +1,12 @@
+<h1>Your Rentals</h1><br>
+<% if !@rent_items.empty? %>
+<div id="rental_list-item">
+  <%= render 'rentals_lists_item' %>
+</div>
+<br/><hr/>
+<%= link_to "Back", videos_path %>  |  
+<%= link_to "Get PDF", rentals_list_show_path(format: :pdf) %>
+<% else %>
+<h3>No items in the rentals list.</h3><br/><hr/>
+<%= link_to "Back", videos_path %>
+<% end %>

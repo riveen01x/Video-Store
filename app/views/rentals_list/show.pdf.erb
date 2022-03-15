@@ -1,0 +1,15 @@
+<h1>Your Rentals</h1><br>
+
+<% @rent_items.each do |item| %>
+	<div>
+		<br/><h3><%= item.video.name %></h3>
+		<h5>Rent Price:  <%= item.video.rent_price %></h5>
+		<h5>No. of copies: <%= item.copies %></h5>
+		<h5>Subtotal: <%= item.total %></h5>
+	<div>
+
+
+<% end %>
+
+<br/><br/>
+<h3>Your current rentals list value has a full total of: $<%= @total_amt %></h3>

@@ -1,0 +1,10 @@
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: "Users") do |sheet|
+  # Create the header row
+  sheet.add_row ["Full Name", "Role", "Email"]
+  # Create entries for each item
+  @users.each do |user|
+    sheet.add_row [user.first_name + ' ' + user.last_name, user.role.name, user.email]
+  end
+end

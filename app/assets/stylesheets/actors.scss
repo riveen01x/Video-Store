@@ -1,0 +1,13 @@
+.category-link {
+  padding: 0px;
+
+  a {
+    color: #FFFFFF;
+
+    .bg-light {
+      &:hover {
+        background-color: lighten(#6c757d, 15.5) !important; 
+      }
+    }
+  }
+}

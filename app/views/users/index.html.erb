@@ -1,0 +1,53 @@
+
+<h1>Users</h1>
+
+
+
+
+<form action="/admin/users" method="GET">
+  <input type="text" name="search_name" >
+  <input type="submit" value="Search for User">
+</form>
+<br>
+
+<form action="/admin/users" method="GET">
+  <label for="filter">Filter Options</label>
+  <select id="filter" name="filter" onchange="this.form.submit()">
+    <option value="">Pick a Filter Option</option>
+    <option value="role" <%= "selected" if session[:filter] == "role" %>>Filter by Role</option>
+  </select>
+  <% if session[:filter] == "role" %>
+    <select name="filter_option" onchange="this.form.submit()">
+      <option value="">Pick a Role</option>
+      <% @roles.each do |role| %>
+        <option value="<%= role.id %>"><%= role.name %></option>
+      <% end %>
+    </select>
+  <% end %>
+</form>
+<%= link_to "Clear Filter Options", clear_path %>
+<table>
+  <thead>
+    <tr>
+      <th>Full Name</th>
+      <th>Role</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @roles.each do |role| %>
+      <% @users.where(role: role.id).each do |user| %>
+        <tr>
+          <td><%= link_to "#{user.first_name} #{user.last_name}", user_path(user) %></td>
+          <td><%= user.role.name %></td>
+          <td><%= user.email %></td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
+<%= link_to 'Export ~>', users_path(format: :xlsx) %>
+<nav>
+<br/>
+<%= link_to 'New User', new_user_path %>

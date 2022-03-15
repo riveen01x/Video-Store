@@ -1,0 +1,73 @@
+<h1>Shopping Cart</h1><br><br>
+
+<% if @cart_items.empty? %>
+<h4>You don't have any items in your cart. Let's get shopping!</h4>
+<br/><br/>
+  <div>
+   <%= link_to 'Start Shopping', root_path, class: "btn btn-primary btn-lg active"%>
+  </div>
+<br/><br/>
+<% else %>
+<% @cart_items.each do |item| %>
+	
+	<h4><strong><%= link_to item.video.name, item.video %></strong></h4>
+      <div>
+        <%= image_tag(item.video.thumbnail, size: '150x125', class: "img-responsive") %>
+      </div>
+<br/>
+      <small><h6>Item price: $<%= item.video.rent_price*2 %></h6></small>
+	<%= form_for item, remote: true do |f| %>
+
+	        <%= f.hidden_field :customer_id, :value => current_customer.id %>
+		<%= f.hidden_field :video_id, :value => item.video.id %>
+		Qty:  <%= f.number_field :quantity, :value => item.quantity.to_i, :min => 1, :max => item.quantity.to_i+item.video.stock %>
+		<%= f.submit "Update item", class: "btn btn-outline-info btn-sm" %>
+               <div>
+		<br/><%= link_to "Remove Item", cart_item_path(item), method: :delete, remote: true, class: "btn btn-outline-danger btn-sm" %>
+               </div>
+	<% end %>
+<br />
+
+	<h4>Subtotal: $<%= item.total %></h4><hr />
+<% end %>
+<br/><br/>
+   <%= button_to 'Empty Cart', @cart, method: :delete, data: { confirm: "Are you sure? " }, class: "button is-danger" %>
+<br/><br/>
+<h4>Items(<strong><%= @cart_items.count %>)</strong></h4>
+<h3>Total Amount: <strong>$<%= @total_amt %></strong></h3>
+<br/>
+<%= form_tag charges_path, id: 'chargeForm' do %>
+      <% if flash[:error].present? %>
+        <div id="error_explanation">
+          <p><%= flash[:error] %></p>
+        </div>
+      <% end %>
+    <script src="https://checkout.stripe.com/checkout.js"></script>
+    <%= hidden_field_tag 'stripeToken'%>
+    <%= hidden_field_tag 'amount',  @total_amt*100 %>  
+    <%= hidden_field_tag 'stripeEmail' %>
+	<% if customer_signed_in? %>
+	    <button id="btn-buy" type="button" class="btn btn-success btn-lg active"><span class="glyphicon glyphicon-ok"></span>CheckOut --></button>
+		<script>
+		   var handler = StripeCheckout.configure({
+			   key: '<%= Rails.configuration.stripe[:publishable_key] %>',
+			   token: function(token, arg){
+			     document.getElementById("stripeToken").value = token.id;
+			     document.getElementById("stripeEmail").value = token.email;
+			     document.getElementById("chargeForm").submit();
+			  }
+		   });
+		   document.getElementById('btn-buy').addEventListener('click', function(e) {
+		       handler.open({
+			 description: 'CHECKOUT ($<%= @total_amt %>)',
+			 amount: document.getElementById("amount").value
+		      });
+		   e.preventDefault();
+		   })
+		</script>
+	<% else %>
+           <%= link_to 'CheckOut -->', new_customer_session_path, class: "btn btn-success btn-lg active" %>
+	<% end %>
+<% end %>
+<br/>
+<% end %>

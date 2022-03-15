@@ -1,0 +1,187 @@
+
+<%= image_tag(@video.thumbnail, size: '310x285') if @video.thumbnail.present? %>
+<p>
+  <strong>Name:</strong>
+  <%= @video.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @video.description %>
+</p>
+
+<p>
+  <strong>Video Genres:</strong>
+  <%= @associated_genres %>
+</p>
+
+<p>
+  <strong>Actors:</strong>
+  <%= render @video.actors %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @video.user.first_name %>
+</p>
+
+<p>
+  <strong>Rent price:</strong>
+  $<%= @video.rent_price %>
+     |
+  <strong>Cart price:</strong>
+  $<%= @video.rent_price*2 %>
+</p>
+
+<% if customer_signed_in? %>
+<strong>Rent copies of: </strong>
+<table>
+ <tr>
+   <%= button_to 'DVD', videos_rent_form_url(:video_id => @video.id, :category_id => @category_id = 1 ), method: :post, class: "btn btn-success btn-sm active" %> |
+   <%= button_to 'VHS', videos_rent_form_url(:video_id => @video.id, :category_id => @category_id = 2 ), method: :post, class: "btn btn-success btn-sm active" %> |
+   <%= button_to 'BLU-RAY', videos_rent_form_url(:video_id => @video.id, :category_id => @category_id = 3 ), method: :post, class: "btn btn-success btn-sm active" %>
+ </tr>
+</table>   --------        <strong>OR</strong>       --------
+<% else %>
+   <%= link_to 'Rent Now!', new_customer_session_path, class: "btn btn-success btn-lg active" %> <br/ >   --------        <strong>OR</strong>       --------
+<% end %>
+
+<br/>
+<%= form_tag charges_path, id: 'chargeForm' do %>
+    <script src="https://checkout.stripe.com/checkout.js"></script>
+    <%= hidden_field_tag 'stripeToken'%>
+    <%= hidden_field_tag 'video_id', @video.id %>  
+    <%= hidden_field_tag 'amount', @video.rent_price*2*100 %>  
+    <%= hidden_field_tag 'stripeEmail' %>
+	<% if customer_signed_in? %>
+	    <button id="btn-buy" type="button" class="btn btn-success btn-lg active"><span class="glyphicon glyphicon-ok"></span>Buy Now!</button>
+
+		<script>
+		   var handler = StripeCheckout.configure({
+			   key: '<%= Rails.configuration.stripe[:publishable_key] %>',
+			   token: function(token, arg){
+			     document.getElementById("stripeToken").value = token.id;
+			     document.getElementById("stripeEmail").value = token.email;
+			     document.getElementById("chargeForm").submit();
+			  }
+		   });
+		   document.getElementById('btn-buy').addEventListener('click', function(e) {
+		       handler.open({
+			 video_id: '<%= @video.id %>',
+			 name: '<%= @video.name %>',
+			 description: 'BUY NOW ($<%= @video.rent_price*2 %>)',
+			 amount: document.getElementById("amount").value
+		      });
+		   e.preventDefault();
+		   })
+		</script>
+	<% else %>
+           <%= link_to 'Buy Now!', new_customer_session_path, class: "btn btn-success btn-lg active" %>
+	<% end %>
+<% end %>
+<% if @cart.line_items.include?(@video) %>
+                 <small><p>This Video is in your cart!</p></small>
+                 <small class="text-muted"><strong><% link_to 'Remove from cart <--', line_item, method: :delete, data: { confirm: "Are you sure? " } %></strong></small>
+  <% else %>
+                <small class="text-muted"><strong><% button_to 'Add to cart -->', line_items_path(video_id: @video), class: "btn btn-primary" %></strong></small>
+  <% end %>
+
+<% button_to 'Add to cart -->', line_items_path(video_id: @video) if customer_signed_in? %>
+
+
+
+
+
+
+ <br/><br/>
+
+      <% if customer_signed_in? && @cart_items.include?(@video) %>
+         <h5>Items in your cart.</h5>
+     <% else %>
+        <p>
+          <strong>Video price:</strong>
+          $<%= @video.rent_price*2 %>
+        </p>
+
+	<%= form_for @cart_item do |f| %>
+	  <%= f.hidden_field :customer_id, :value => current_customer.id unless !customer_signed_in? %>
+	  <%= f.hidden_field :video_id, :value => @video.id %>
+          <% if @video.stock == 0 %>
+            <% if @waitlist.nil? %>
+               <h5><strong><span class="badge bg-secondary">Joined!</span></strong></h5> 
+            <% else %>
+               <h5><strong><span class="badge bg-secondary">Out of stock</span></strong></h5> 
+               <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#exampleModalCenter">Email me when available</button>
+            <% end %>
+          <% else %>
+	     Qty: <%= f.number_field :quantity, :value => 1, :min => 1 , :max => @video.stock %><small> <%= pluralize( @video.stock , 'item') %> in stock.</small><br/><br/>
+	     <%= f.submit "Add to Cart " %>
+          <% end %>
+        <% end %>
+     <% end %>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLongTitle"><strong>Join Waitlist</strong></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+    <%= form_for @waitlist do |f| %>
+      <div class="modal-body">
+   <% if flash[:error].present? %>
+        <div id="error_explanation">
+          <p><%= flash[:error] %></p>
+        </div>
+    <% end %>
+        <p>We will inform you when the item arrives in stock. Please leave your valid email address below.</p>
+        <% if customer_signed_in? %> 
+            <strong>Your Email: </strong><%= f.text_field :email, :value => @customer.email, disabled: "disabled", class: "form-control" %>
+            <%= f.hidden_field :email, :value => @customer.email %>
+            <%= f.hidden_field :video_id, :value => @video.id %>
+        <% else %>
+          <strong>Your Email: </strong><%= f.text_field :email, :placeholder => "Email", class: "form-control" %>
+          <%= f.hidden_field :video_id, :value => @video.id %>
+        <% end %>
+      </div>
+      <div class="modal-footer">
+        <%= f.submit "Join", class: "btn btn-primary" %>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+       <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<% if user_signed_in? %>
+<br/>
+<h5>Avaliable copies </h5>
+<div>
+<table class="table table-borderless">
+  <tr class="table-light">
+    <td><strong>DVD copies: </strong><%= @video.dvd_copies %></td>
+    <td><strong>VHS copies: </strong><%= @video.vhs_copies %></td>
+    <td><strong>BLU-RAY copies: </strong><%= @video.bluray_copies %></td>
+  </tr>
+</table>
+</div>
+<% end %>
+
+
+
+
+<br/>
+<% if can? :update, @video %>
+  <%= link_to 'Edit', edit_video_path, class: "btn btn-outline-warning btn-sm" %> ||
+<% end%>
+
+<% if can? :destroy, @video %>
+  <%= link_to 'Delete', @video, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-outline-danger btn-sm" %>
+<% end%>
+
+<br/><br/><br/>
+<%= link_to 'Back', videos_path, class: "btn btn-outline-secondary" %>

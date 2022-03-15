@@ -1,0 +1,30 @@
+<div>
+ <div>
+   <%= line_item.quantity %>
+ </div>
+ 
+ <div>
+  <figure>
+   <%= image_tag(line_item.video.thumbnail, size: '180x155', class: "img-responsive") %>
+  </figure>
+ </div>
+ <div>
+  <strong><%= line_item.video.name %></strong>
+  <div>
+    <div>
+      <%= line_item.video.description %>
+    </div>
+    <div>
+       <strong><%= number_to_currency(line_item.total_price) %></strong>
+    </div>
+  </div>
+ </div>
+</div>
+
+<div>
+  <%= link_to 'Remove Item', line_item, method: :delete, data: { confirm: "Are you sure? " } %>
+</div>
+
+<hr />
+
+
