@@ -1,6 +1,6 @@
 <h1>Your Rentals</h1><br>
 
-<% @rent_items.each do |item| %>
+<% @rent_items_without_pagination.each do |item| %>
 	<div>
 		<br/><h3><%= item.video.name %></h3>
 		<h5>Rent Price:  <%= item.video.rent_price %></h5>

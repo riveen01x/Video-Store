@@ -61,8 +61,9 @@
   <h4> No matching results found! </h4><br/>
 </div>
 <% end %>
-
-
+<div>
+<%= will_paginate @videos, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+</div><br />
  <div class="card-deck ">
 <h2>Recent Videos</h2>
        <div class="row row-cols-1 row-cols-md-3">
@@ -95,7 +96,6 @@
  </div>
 <% end %>
 <% end %>
-
 
 <br>
 <div class="shadow-lg p-3 mb-5 bg-white rounded">

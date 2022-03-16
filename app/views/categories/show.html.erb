@@ -1,8 +1,11 @@
-<p id="notice"><%= notice %></p>
 
 <p>
   <strong>Name:</strong>
   <%= @category.name %>
+</p>
+<p>
+  <strong>Price:</strong>
+  $<%= @category.price %>
 </p>
 
 <%= link_to 'Edit', edit_category_path(@category) %> |

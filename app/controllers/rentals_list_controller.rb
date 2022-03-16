@@ -1,6 +1,6 @@
 class RentalsListController < ApplicationController
   def show
-    @rent_items = current_customer.rent_items
+    @rent_items = current_customer.rent_items.paginate(page: params[:page], per_page: 2)
  
     @total_amt = current_customer.rent_items.collect { |rent_item| rent_item.unit_price*rent_item.copies }.sum
 
@@ -32,7 +32,7 @@ redirect_to rentals_list_show_path, notice: "Rentals deleted successfully!"
  end
 
   def create_pdf
-
+   @rent_items_without_pagination = current_customer.rent_items
     # GeneratePdfJob.perform_now
      respond_to do |format|
       format.html

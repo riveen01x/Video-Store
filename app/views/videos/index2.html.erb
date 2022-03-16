@@ -6,7 +6,7 @@
     <tr>
       <th rowspan="2">id</th>
       <th rowspan="2">Name</th>
-      <th rowspan="2">Rent Price</th>
+      <th rowspan="2">Item Price</th>
       <th rowspan="2">Available stock</th>
       <th colspan="3">Copies available</th>
     </tr>
@@ -23,7 +23,7 @@
         <tr>
           <td><%= video.id %></td>
           <td><%= link_to video.name, video %></td>
-          <td>$<%= video.rent_price %></td>
+          <td>$<%= video.rent_price*2 %></td>
           <% if video.stock == 0 %>
             <td><small><strong>Out of stock</strong></small></td>
           <% else %>

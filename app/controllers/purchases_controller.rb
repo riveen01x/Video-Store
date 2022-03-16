@@ -26,8 +26,8 @@ class PurchasesController < ApplicationController
 
 
   def previous_purchases
-   @purchase_histories = current_customer.purchase_histories.to_a
-   @cart_items = current_customer.cart_items.to_a
+   @purchase_histories = current_customer.purchase_histories.paginate(page: params[:page], per_page: 4)
+   @cart_items = current_customer.cart_items.paginate(page: params[:page], per_page: 4)
 
   # @purchase_histories = @purchase_histories.search(params[:search]) 
   end

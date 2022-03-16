@@ -1,66 +1,82 @@
-<h2><strong>PREVIOUS COMPLETED ORDERS</strong></h2>
-<br/>
-<%= form_with(url: '/purchases/previous_purchases', method: 'get', local: true) do %>
-  <%= text_field_tag 'search', nil, id: 'videos_search', autocomplete: :off, placeholder: "Search.."  %>
-  <%= submit_tag("Search", class: "btn btn-outline-secondary") %>
-  <%= link_to "Clear", root_path, class: "btn btn-outline-secondary" %>
-<% end %>
 
-<br/>
-<table>.
-  <thead>
-    <tr>
-      <th>Order Item</th>
-      <th colspan="1"></th>
-      <th>Qty.</th>
-      <th>Subtotal</th>
-      <th>Purchase details</th>
-      <th><strong>Status</strong></th>
-    </tr>
-  </thead>
+<div class="card border-secondary">
+  <h2 class="card-header text-white bg-secondary"><strong>PREVIOUS COMPLETED ORDERS</strong></h2>
+  <div class="card-body">
+	<br/>
+	<%= form_with(url: '/purchases/previous_purchases', method: 'get', local: true) do %>
+	  <%= text_field_tag 'search', nil, id: 'videos_search', autocomplete: :off, placeholder: "Search.."  %>
+	  <%= submit_tag("Search", class: "btn btn-outline-secondary") %>
+	  <%= link_to "Clear", root_path, class: "btn btn-outline-secondary" %>
+	<% end %>
 
-  <tbody>
-<% @purchase_histories.each do |item| %>
- <tr>
-	<td><h4><%= link_to item.video.name, item.video %></h4></td>
-        <td><%= image_tag(item.video.thumbnail, size: '130x105', class: "img-responsive") %></td>
-	<td><h6><%= item.quantity %></h6></td>
-	<td><h6>$<%= item.total %></h6></td>
-        <td><h6><%= item.purchased_at.strftime('Purchased on %m-%d-%Y at %I:%M%p') %></h6></td>
-        <td><h6> Completed.</h6></td>
-</tr>
-<% end %>
-</tbody>
-</table>
-<br/>
-<strong><hr /></strong>
-<h2><strong>PENDING ORDERS</strong></h2>
-<br/><br/>
-<% if @cart_items.empty? %><br />
-  <h5>You don't have any pending orders.</h5>
-<% else %>
-<table>.
-  <thead>
-    <tr>
-      <th>Order Item</th>
-      <th colspan="1"></th>
-      <th>Qty.</th>
-      <th>Subtotal</th>
-      <th><strong>Status</strong></th>
-    </tr>
-  </thead>
+	<br/>
+	<table>.
+	  <thead>
+	    <tr>
+	      <th>Order Item</th>
+	      <th colspan="1"></th>
+	      <th>Qty.</th>
+	      <th>Subtotal</th>
+	      <th>Purchase details</th>
+	      <th><strong>Status</strong></th>
+	    </tr>
+	  </thead>
 
-  <tbody>
-  <% @cart_items.each do |item| %>
- <tr>
-	<td><h4><%= link_to item.video.name, item.video %></h4></td>
-        <td><%= image_tag(item.video.thumbnail, size: '130x105', class: "img-responsive") %></td>
-	<td><h6><%= item.quantity %></h6></td>
-	<td><h6>$<%= item.total %></h6></td>
-        <td><h6>Pending..</h6><br/><h7><strong>Added to cart.</strong></h7></td>
- <tr>
-  <% end %>
-<% end %>
-</tbody>
-</table>
-<br/>
+	  <tbody>
+	<% @purchase_histories.each do |item| %>
+	 <tr>
+		<td><h4><%= link_to item.video.name, item.video %></h4></td>
+		<td><%= image_tag(item.video.thumbnail, size: '130x105', class: "img-responsive") %></td>
+		<td><h6><%= item.quantity %></h6></td>
+		<td><h6>$<%= item.total %></h6></td>
+		<td><h6><%= item.purchased_at.strftime('Purchased on %m-%d-%Y at %I:%M%p') %></h6></td>
+		<td><h6> Completed.</h6></td>
+	</tr>
+	<% end %>
+	</tbody>
+	</table>
+	<br/>
+	<%= will_paginate @purchase_histories, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+	<strong><hr /></strong>
+  </div>
+</div>
+<br />
+<br />
+<div class="card border-secondary">
+  <h2 class="card-header text-white bg-secondary"><strong>PENDING ORDERS</strong></h2>
+  <div class="card-body">
+	<br/><br/>
+	<% if @cart_items.empty? %><br />
+	  <h5>You don't have any pending orders.</h5>
+	<% else %>
+	<table>.
+	  <thead>
+	    <tr>
+	      <th>Order Item</th>
+	      <th colspan="1"></th>
+	      <th>Qty.</th>
+	      <th>Subtotal</th>
+	      <th><strong>Status</strong></th>
+	    </tr>
+	  </thead>
+
+	  <tbody>
+	  <% @cart_items.each do |item| %>
+	 <tr>
+		<td><h4><%= link_to item.video.name, item.video %></h4></td>
+		<td><%= image_tag(item.video.thumbnail, size: '130x105', class: "img-responsive") %></td>
+		<td><h6><%= item.quantity %></h6></td>
+		<td><h6>$<%= item.total %></h6></td>
+		<td><h6>Pending..</h6><br/><h7><strong>Added to cart.</strong></h7></td>
+	 <tr>
+	  <% end %>
+	<% end %>
+	</tbody>
+	</table>
+	<br/>
+	<%= will_paginate @cart_items, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+	<strong><hr /></strong>
+  </div>
+</div>
+
+

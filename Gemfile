@@ -34,7 +34,8 @@ gem 'braintree', '>= 4.4', '< 5.0'
 gem 'paddle_pay', '~> 0.1'
 gem 'receipts', '~> 1.1'
 gem 'faker', '~> 2.19'
-gem 'real_notification'
+gem 'will_paginate', '~> 3.3', '>= 3.3.1'
+gem 'will_paginate-bootstrap4'
 
 
 

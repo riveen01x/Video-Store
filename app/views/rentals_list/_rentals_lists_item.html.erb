@@ -22,7 +22,12 @@
 <% end %>
 <br/>
 <div> 
-  <%= link_to 'Empty rent', rentals_list_destroy_path, method: :delete, data: { confirm: "Are you sure? " }, class: "btn " %>
+<%= link_to 'Empty rent', rentals_list_destroy_path, method: :delete, data: { confirm: "Are you sure? " }, class: "btn " %><br>
+<table>
+ <tr>
+  <br><%= will_paginate @rent_items, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+ </tr>
+</table> 
 </div><br/>
 <h3>Total Amount: <strong>$<%= @total_amt %></strong></h3>
 <h3><% current_customer.id %></h3>

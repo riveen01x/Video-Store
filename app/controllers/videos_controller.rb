@@ -11,9 +11,9 @@ class VideosController < ApplicationController
   def index
     @rent_item = current_rent.rent_items.new
    # @cart_item = current_cart.cart_items.new
-    @videos = Video.all
+    @videos = Video.paginate(page: params[:page], per_page: 4)
     @recent_videos = Video.all.order('created_at DESC').limit(4).offset(1)
-    @videos = Video.search(params[:search]) 
+    @videos = Video.search(params[:search]).paginate(page: params[:page], per_page: 4) 
     @genres = Genre.all
     handle_filters
     #@cart = Cart.find(session[:cart_id])
