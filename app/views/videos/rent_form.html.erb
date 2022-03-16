@@ -1,4 +1,4 @@
-
+    
 <p>
   <strong>Rent price:</strong>
   $<%= @video.rent_price %>
@@ -10,13 +10,21 @@
 	  <%= f.hidden_field :category_id, :value => @category_id.to_i  %>
 <br/><br/>
         <% if @category_id.to_i == 1 %>
-	  No of copies: <%= f.number_field :copies, :value => 1, :min => 1, :max => @video.dvd_copies %><small> Only <%= pluralize(@video.dvd_copies, 'copy') %> available!</small><br/><br/>
+	  No of copies: <%= f.number_field :copies, :value => 1, :min => 1, :max => @video.dvd_copies, required: true %><small> Only <%= pluralize(@video.dvd_copies, 'copy')%> available!</small><br/><br/>
         <% elsif @category_id.to_i == 2 %>
-	  No of copies: <%= f.number_field :copies, :value => 1, :min => 1, :max => @video.vhs_copies %><small> Only <%= pluralize(@video.vhs_copies, 'copy') %> available!</small><br/><br/>
+	  No of copies: <%= f.number_field :copies, :value => 1, :min => 1, :max => @video.vhs_copies, required: true %><small> Only <%= pluralize(@video.vhs_copies, 'copy') %> available!</small><br/><br/>
         <% elsif @category_id.to_i == 3 %>
-	  No of copies: <%= f.number_field :copies, :value => 1, :min => 1, :max => @video.bluray_copies %><small> Only <%= pluralize(@video.bluray_copies, 'copy') %> available!</small><br/><br/>
+	  No of copies: <%= f.number_field :copies, :value => 1, :min => 1, :max => @video.bluray_copies, required: true %><small> Only <%= pluralize(@video.bluray_copies, 'copy') %> available!</small><br/><br/>
         <% end %>
-	  Expected return: <%= f.date_select :return_date, order: [:month, :day, :year], default: 1.days.from_now, start_year: 2022, prompt: { day: 'Select day', month: 'Select month', year: 'Select year' }, required: true %>
+
+  Expected return: <%= f.text_field :return_date, required: true, 
+    data: {
+      controller: "flatpickr",
+      flatpickr_date_format: "Y-m-d",
+      flatpickr_min_date: Time.zone.now
+    }, required: true %>
+
+
 	  <br/><br/>
 	  <%= f.submit "Add to list " %>
 

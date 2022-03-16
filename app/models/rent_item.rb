@@ -8,7 +8,7 @@ class RentItem < ApplicationRecord
 	before_save :set_total
         before_save :set_rented_at
 
-
+        validates :return_date, :presence => {message: 'Id number required'}
 
 
 	def unit_price

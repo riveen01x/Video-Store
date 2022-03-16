@@ -126,11 +126,13 @@ class VideosController < ApplicationController
 
   def rent_form
     @rent_item = current_rent.rent_items.new
+
     @video = Video.find(params[:video_id])
 
     @categories = Category.all.map{ |c| [c.name, c.id] } 
    # @video.category_id = params[:category_id]
     @category_id = params[:category_id]
+
 
   end
 

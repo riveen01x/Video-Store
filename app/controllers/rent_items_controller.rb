@@ -13,6 +13,7 @@ skip_before_action :verify_authenticity_token
                   @copies = @rent_item.copies
                   @current_category_id = @rent_item.category_id.to_i
 		  @rent_item.save
+
                   if @current_category_id == 1
                     @available = @video.dvd_copies - @copies
                     @video.update(:dvd_copies => @available)
