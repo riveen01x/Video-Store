@@ -2,7 +2,8 @@ class RentalsListController < ApplicationController
   def show
     @rent_items = current_customer.rent_items.paginate(page: params[:page], per_page: 2)
  
-    @total_amt = current_customer.rent_items.collect { |rent_item| rent_item.unit_price*rent_item.copies }.sum
+	
+    @total_amt = current_customer.rent_items.collect { |rent_item| rent_item.unit_price*rent_item.copies*((rent_item.return_date - rent_item.rented_at).seconds.in_days.to_i) }.sum
 
     #create_pdf
     ReportWorker.perform_async("12-02-2022", "12-03-2022")

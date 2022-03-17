@@ -37,9 +37,23 @@
 <strong>Rent copies of: </strong>
 <table>
  <tr>
-   <%= button_to 'DVD', videos_rent_form_url(:video_id => @video.id, :category_id => @category_id = 1 ), method: :post, class: "btn btn-success btn-sm active" %> |
-   <%= button_to 'VHS', videos_rent_form_url(:video_id => @video.id, :category_id => @category_id = 2 ), method: :post, class: "btn btn-success btn-sm active" %> |
-   <%= button_to 'BLU-RAY', videos_rent_form_url(:video_id => @video.id, :category_id => @category_id = 3 ), method: :post, class: "btn btn-success btn-sm active" %>
+   <% if @video.dvd_copies == 0 %>
+       <h5><strong><span class="badge bg-secondary">Out of DVD copies!</span></strong></h5> 
+   <% else %>
+       <%= button_to 'DVD', videos_rent_form_url(:video_id => @video.id, :category_id => @category_id = 1 ), method: :post, class: "btn btn-success btn-sm active" %> 
+   <% end %>
+
+   <% if @video.vhs_copies == 0 %>
+       <h5><strong><span class="badge bg-secondary">Out of VHS copies!</span></strong></h5> 
+   <% else %>
+       | <%= button_to 'VHS', videos_rent_form_url(:video_id => @video.id, :category_id => @category_id = 2 ), method: :post, class: "btn btn-success btn-sm active" %>
+   <% end %>
+
+   <% if @video.bluray_copies == 0 %>
+       <h5><strong><span class="badge bg-secondary">Out of BLU-RAY copies!</span></strong></h5> 
+   <% else %>
+       | <%= button_to 'BLU-RAY', videos_rent_form_url(:video_id => @video.id, :category_id => @category_id = 3 ), method: :post, class: "btn btn-success btn-sm active" %>
+   <% end %>
  </tr>
 </table>   --------        <strong>OR</strong>       --------
 <% else %>
@@ -163,9 +177,15 @@
 <div>
 <table class="table table-borderless">
   <tr class="table-light">
-    <td><strong>DVD copies: </strong><%= @video.dvd_copies %></td>
-    <td><strong>VHS copies: </strong><%= @video.vhs_copies %></td>
-    <td><strong>BLU-RAY copies: </strong><%= @video.bluray_copies %></td>
+    <td>
+       <strong>DVD copies: </strong><%= @video.dvd_copies %>
+    </td>
+    <td>
+         <strong>VHS copies: </strong><%= @video.vhs_copies %>
+    </td>
+    <td>
+         <strong>BLU-RAY copies: </strong><%= @video.bluray_copies %>
+    </td>
   </tr>
 </table>
 </div>

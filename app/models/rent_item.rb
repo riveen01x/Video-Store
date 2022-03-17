@@ -4,14 +4,20 @@ class RentItem < ApplicationRecord
 	belongs_to :customer
         belongs_to :category
 
+        before_save :set_rented_at
 	before_save :set_unit_price
 	before_save :set_total
-        before_save :set_rented_at
+        
 
 
         validates :return_date, :presence => {message: 'Id number required'}
 
 
+
+        def set_rented_at
+    		self[:rented_at] = Date.today
+        end
+ 
 	def unit_price
 		if persisted?
 			self[:unit_price]
@@ -20,8 +26,12 @@ class RentItem < ApplicationRecord
 		end
 	end
 
+        def time_in_days
+               return (self[:return_date] - self[:rented_at]).seconds.in_days.to_i
+        end
+
 	def total
-		return unit_price*copies
+		return unit_price*copies*time_in_days
 	end
 
 	private
@@ -36,8 +46,5 @@ class RentItem < ApplicationRecord
 		self[:total] = total
 	end
   
-        def set_rented_at
-    		self[:rented_at] = Date.today
-        end
 
 end

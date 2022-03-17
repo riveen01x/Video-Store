@@ -5,11 +5,12 @@
          <div>
           <%= image_tag(item.video.thumbnail, size: '180x155') if item.video.thumbnail.present? %>
         </div>
-	<h5>Rent Price: $<%= item.unit_price %></h5>
+	<h5>Rent Price: $<%= item.unit_price %>/day</h5>
 	<h5>Copy Type: <%= item.category.name %></h5>
         <h5>Qty: <%= item.copies.to_i %></h5>
         <h5>Rented at <%= item.rented_at.strftime('%m-%d-%Y') %></h5>
-	<h5><% item.rent_id %></h5>
+        <h5>Rent period: <%= distance_of_time_in_words(item.return_date, item.rented_at) %></h5>
+ 	<h5><% item.rent_id %></h5>
 
         <small><h4><strong>Subtotal: </strong>$<%= item.total %></h4></small>
 
