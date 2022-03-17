@@ -4,7 +4,6 @@ class RentalsListController < ApplicationController
  
     @total_amt = current_customer.rent_items.collect { |rent_item| rent_item.unit_price*rent_item.copies }.sum
 
-
     #create_pdf
     ReportWorker.perform_async("12-02-2022", "12-03-2022")
     create_pdf

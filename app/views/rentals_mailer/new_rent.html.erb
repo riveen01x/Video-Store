@@ -9,7 +9,7 @@
       <div id="receipt-container">
         <div class="dotmatrix left"></div>
         <div id="receipt-content">
-          <h4 id="receipt-title">Hey, your waitlisted item is now available!</h4>
+          <h4 id="receipt-title">Hey, your 2 days away from returning your rented item - <%= @video.name %></h4>
             <br/>===============================================<br/>
 
           <div id="receipt-details" class="row clearfix">
@@ -17,17 +17,15 @@
               <p><span class="font-weight-light">Item: </span>
                     <h4><strong class="font-weight-heavy"><%= @video.name %></strong></h4>
                     <div>
-                      <%= image_tag(@video.thumbnail, size: '190x165') if @video.thumbnail.present? %>
+                      <%= image_tag(@video.thumbnail, size: '290x265') if @video.thumbnail.present? %>
                      </div>
-                    <h6><strong class="font-weight-heavy">price: <%= @video.rent_price*2 %></strong></h6>
-                    <h6><strong class="font-weight-heavy">Newly available items stock: <%= @video.stock %></strong></h6> 
+                    <h6><strong class="font-weight-heavy">No. of copies: <%= @item.copies %></strong></h6>
+                    <h6><strong class="font-weight-heavy">Total price: <%= @item.total %></strong></h6>
+                    <h5><strong class="font-weight-heavy">Return date: <%= @item.return_date %></strong></h5> 
                     <hr/><br/>
               </p>          
             </div>
           </div>
-          <footer id="receipt-footer">
-            <small>You can go shopping now!</small>
-          </footer>
         </div>
         <div class="dotmatrix right"></div>
       </div>

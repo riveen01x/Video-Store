@@ -8,6 +8,7 @@ class RentItem < ApplicationRecord
 	before_save :set_total
         before_save :set_rented_at
 
+
         validates :return_date, :presence => {message: 'Id number required'}
 
 
@@ -38,7 +39,5 @@ class RentItem < ApplicationRecord
         def set_rented_at
     		self[:rented_at] = Date.today
         end
-
-
 
 end

@@ -1,0 +1,11 @@
+Hey, your 2 days away from returning your rented item - <%= @video.name %>
+===============================================
+
+         Item: 
+                    <%= @video.name %>
+                    <%= image_tag(@video.thumbnail, size: '290x265') if @video.thumbnail.present? %>
+                    No. of copies: <%= @item.copies %>
+	            Total price: <%= @item.total %>
+                    Return date: <%= @item.return_date %>
+
+

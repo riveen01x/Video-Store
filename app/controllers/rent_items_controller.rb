@@ -14,6 +14,17 @@ skip_before_action :verify_authenticity_token
                   @current_category_id = @rent_item.category_id.to_i
 		  @rent_item.save
 
+                  customer = current_customer
+                  video = @video
+                  rent = @rent_item
+
+                  if @rent_item.return_date == Date.today+2.days
+                      RentalsMailer.new_rent(customer, video, rent).deliver_now
+                  elsif @rent_item.return_date > Date.today+2.days
+                      notify_date = @rent_item.return_date
+                      RentalsMailer.new_rent(customer, video, rent).deliver_later!(wait_until: notify_date.days_ago(2))
+                  end
+
                   if @current_category_id == 1
                     @available = @video.dvd_copies - @copies
                     @video.update(:dvd_copies => @available)
