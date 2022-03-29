@@ -4,11 +4,12 @@ class ActorsController < ApplicationController
 
   # GET /actors
   def index
-    @actors = Actor.all
+    @actors = Actor.all.order('name ASC')
   end
 
   # GET /actors/1
   def show
+    @videos = @actor.videos.order('name ASC')
   end
 
   # GET /actors/new

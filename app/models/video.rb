@@ -8,6 +8,7 @@ class Video < ApplicationRecord
   has_many :rent_items
   belongs_to :customer, optional: true
   belongs_to :category, optional: true
+  has_many :reviews
   
   validates :rent_price, numericality: { only_decimal: true }, presence: true, allow_blank: false
 
@@ -32,6 +33,10 @@ class Video < ApplicationRecord
             all
         end
     end 
+   
+    def self.search_by(search_term)
+      where("LOWER(name) LIKE :search_term", search_term: "%#{search_term.downcase}%")
+    end
 
   private
 

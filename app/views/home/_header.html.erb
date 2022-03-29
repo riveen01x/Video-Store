@@ -1,6 +1,6 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-custom">
-     <%= link_to 'Store', root_path, class: "navbar-brand" %>
+     <%= link_to 'Store', main_app.root_path, class: "navbar-brand" %>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -8,7 +8,7 @@
       <ul class="navbar-nav">
 
         <li class="nav-item">
-            <% link_to 'About Me', root_path, class: "nav-link" %>
+            <% link_to 'About Me', main_app.root_path, class: "nav-link" %>
         </li>
 
         <% if cart_has_items %>
@@ -52,19 +52,43 @@
 <ul class="navbar-nav">
         <% elsif user_signed_in? %>
 
-		    <span class="navbar-text">
-		        Signed in as <%= current_user.email %>.  Not you?<br/>
-		    </span>
+		    <li class="nav-item">
+                        <%= link_to "Videos", main_app.videos_index2_path, class: "nav-link" %>
+		    </li>
 
 		    <li class="nav-item">
-		         <%= link_to "My Profile", users_edit_profile_path, class: "nav-link" %>
+                        <%= link_to "Users", main_app.users_path, class: "nav-link" %>                
 		    </li>
 
 
 		    <li class="nav-item">
-		         <%= link_to "Sign out",  destroy_user_session_path, method: :delete, class: "nav-link" %>
+		         <%= link_to "Roles", main_app.roles_path, class: "nav-link" %>
 		    </li>
 
+		    <li class="nav-item">
+		         <%= link_to "Categories", main_app.categories_path, class: "nav-link" %>
+		    </li>
+
+ 		     <li class="nav-item">
+		         <%= link_to "Orders",  main_app.purchases_orders_path, class: "nav-link" %>
+		     </li>
+
+      <% if Notification.unread_count(current_user) == 0 %>
+                    <li class="nav-item">
+		         <%= link_to "Notifications", notifications_path, class: "nav-link" %>
+		    </li>
+      <% else %>
+		    <li class="nav-item">
+		         <%= link_to notifications_path do %>
+<span class="badge badge-primary badge-pill"><%= Notification.unread_count(current_user) %></span>
+                         <% end %>
+		    </li>
+
+                     <li class="nav-item">
+                       <small class="text-white bg-dark">Notifications</small>
+                     </li>
+
+       <% end %>
          <% else %> 
               <li class="nav-item">
 		<%= link_to "Sign Up", new_customer_registration_path, class: "nav-link" %> 
@@ -78,16 +102,19 @@
       </ul>
   </div> 
   <% if @current_user && @current_user.admin? || @current_user && @current_user.super_user? %>
+ <span class="navbar-text">
+     Signed in as <br/>
+ </span>
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Available
+           <%= current_user.email %>
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <%= link_to "Videos", videos_index2_path, class: "nav-link dropdown-item" %>
-          <%= link_to "Users", users_path, class: "nav-link dropdown-item" %>                
-          <%= link_to "Roles", roles_path, class: "nav-link dropdown-item" %>
+          <%= link_to "My Profile", main_app.users_edit_profile_path, class: "nav-link dropdown-item" %>
+          <%= link_to "Sign out",  main_app.destroy_user_session_path, method: :delete, class: "nav-link dropdown-item text-danger" %>
         </div>
      </li>
+.  Not you?<br/>
    <% elsif customer_signed_in? %>
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

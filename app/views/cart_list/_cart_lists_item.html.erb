@@ -23,7 +23,7 @@
 		Qty:  <%= f.number_field :quantity, :value => item.quantity.to_i, :min => 1, :max => item.quantity.to_i+item.video.stock %>
 		<%= f.submit "Update item", class: "btn btn-outline-info btn-sm" %>
                <div>
-		<br/><%= link_to "Remove Item", cart_item_path(item), method: :delete, remote: true, class: "btn btn-outline-danger btn-sm" %>
+		<br/><%= button_to "Remove Item", cart_item_path(item), method: :delete, data: { confirm: "Are you sure? " }, remote: true, class: "delete" %>
                </div>
 	<% end %>
 <br />

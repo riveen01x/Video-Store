@@ -4,7 +4,12 @@ class RolesController < ApplicationController
 
   # GET /roles
   def index
-    @roles = Role.all
+    if params[:sort].nil?
+       @roles = Role.all
+    else
+       @roles = Role.order(params[:sort])
+    end
+
   end
 
   # GET /roles/1

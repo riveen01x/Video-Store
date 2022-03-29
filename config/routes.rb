@@ -1,7 +1,9 @@
 require 'sidekiq/web'
 Rails.application.routes.draw do
 
-  resources :waitlists
+  resources :replies
+  mount Notifications::Engine => "/notifications"
+ resources :waitlists
  resources :line_items
  resources :carts
  resources :categories
@@ -11,6 +13,7 @@ Rails.application.routes.draw do
 
  get 'videos/index2'
 
+ get 'purchases/orders'
  get 'purchases/previous_purchases'
  post 'purchases/show'
 
@@ -41,6 +44,7 @@ Rails.application.routes.draw do
 
   resources :actors
   resources :videos do
+   resources :reviews
    collection do
     get :autocomplete
    end
@@ -68,7 +72,7 @@ Rails.application.routes.draw do
     resources :rentals_list, only: [:show]
   end   
 
-  root to: 'videos#index'
+  root :to => "videos#index" 
 
   post 'copies/new', to: 'copies#new'
   get '/users/clear', to: 'users#clear', as: 'clear'

@@ -1,0 +1,137 @@
+
+<div class="card border-secondary">
+  <h2 class="card-header text-white bg-secondary"><strong>Finished Orders</strong></h2>
+  <div class="card-body">
+	<br/>
+	<%= form_with(url: '/purchases/previous_purchases', method: 'get', local: true) do %>
+	  <%= text_field_tag 'search', nil, id: 'videos_search', autocomplete: :off, placeholder: "Search.."  %>
+	  <%= submit_tag("Search", class: "btn btn-outline-secondary") %>
+	  <%= link_to "Clear", root_path, class: "btn btn-outline-secondary" %>
+	<% end %>
+<br />
+<%= form_for "", url: purchases_orders_path, role: "search", method: :get do %>
+  <%= number_field_tag :filter, @search_term, placeholder: "Filter by Orders...", min: 1, max: PurchaseHistory.count,value: params[:filter], :required => true %>
+  <%= select_tag :page, options_for_select(['all','2011','2010','2009'])%> 
+  <%= submit_tag "Filter", class: "btn btn-outline-secondary btn-sm" %>
+<% end %>
+
+
+	<br/>
+	<table>
+	  <thead>
+	    <tr>
+              <th><strong><%= link_to "Customer email" %></strong></th>
+	      <th><%= link_to "Order Item" %></th>
+	      <th colspan="1"></th>
+	      <th><%= link_to "Qty.", :sort => "quantity" %></th>
+	      <th><%= link_to "Order Subtotal", :sort => "total" %></th>
+	      <th><%= link_to "Order details", :sort => "purchased_at" %></th>
+	      <th><strong>Status</strong></th>
+	    </tr>
+	  </thead>
+
+	  <tbody>
+	<% @finished_orders.each do |item| %>
+	 <tr>
+		<td><h6><%= item.customer.email %></h6></td>
+		<td><h5><%= link_to item.video.name, item.video %></h5></td>
+		<td><%= image_tag(item.video.thumbnail, size: '100x75', class: "img-responsive rounded") %></td>
+		<td><h6><%= item.quantity %></h6></td>
+		<td><h6>$<%= item.total %></h6></td>
+		<td><h6><%= item.purchased_at.strftime('Purchased on %m-%d-%Y at %I:%M%p') %></h6></td>
+		<td><h6><strong> Completed.</strong></h6></td>
+	</tr>
+	<% end %>
+	</tbody>
+	</table>
+        <% if params[:filter].nil? %>
+ 		<small> Displaying <strong>4</strong> out of <strong><%= PurchaseHistory.count %></strong> results.</small>
+        <% else %>
+        	<small> Displaying <strong><%= params[:filter] %></strong> out of <strong><%= PurchaseHistory.count %></strong> results.</small>
+        <% end %>
+	<br/>
+	
+	<strong><hr /></strong>
+  </div>
+</div>
+<br />
+<br />
+<div class="card border-secondary">
+  <h2 class="card-header text-white bg-secondary"><strong>ORDERS TO BE CONFIRMED</strong></h2>
+  <div class="card-body">
+	<br/><br/>
+	<% if @orders.empty? %><br />
+	  <h5>No orders are to be confirmed yet.</h5>
+	<% else %>
+	<table>.
+	  <thead>
+	    <tr>
+	      <th><%= link_to "Customer email" %></th> 
+	      <th><%= link_to "Order Item" %></th>
+	      <th colspan="1"></th>
+	      <th><%= link_to "Qty.", :sort => "quantity" %></th>
+	      <th><%= link_to "Subtotal", :sort => "total" %></th>
+	      <th><strong>Status</strong></th>
+	      <th colspan="1"></th>
+	    </tr>
+	  </thead>
+
+	  <tbody>
+	  <% @orders.each do |item| %>
+	 <tr>
+		<td><h6><%= item.customer.email %></h6></td>
+		<td><h5><%= link_to item.video.name, item.video %></h5></td>
+		<td><%= image_tag(item.video.thumbnail, size: '100x75', class: "img-responsive rounded") %></td>
+		<td><h6><%= item.quantity %></h6></td>
+		<td><h6>$<%= item.total %></h6></td>
+		<td><h6>Pending..</h6><br/><h7><strong>Added to cart.</strong></h7></td>
+		<td><h6><%= button_to "Confirm", '', class: "btn btn-primary btn-sm text-white" %> <strong>-</strong> <%= button_to "Cancel", item, method: :delete, data: { confirm: "Are you sure? " }, class: "btn btn-danger btn-sm text-white" %></h6></td>
+	 <tr>
+	  <% end %>
+	<% end %>
+	</tbody>
+	</table>
+	<br/>
+	<%= will_paginate @orders, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+	<strong><hr /></strong>
+  </div>
+</div>
+<br/><br/>
+<div class="card border-secondary">
+  <h2 class="card-header text-white bg-secondary"><strong>CANCELLED ORDERS</strong></h2>
+  <div class="card-body">
+	<br/><br/>
+	<% if @cancelled_orders.empty? %><br />
+	  <h5>No orders have been cancelled yet!</h5>
+	<% else %>
+	<table>.
+	  <thead>
+	    <tr>
+	      <th>Customer email</th> 
+	      <th>Order Item(Video)</th>
+	      <th>Qty.</th>
+	      <th>Subtotal</th>
+	      <th><strong>Status</strong></th>
+	    </tr>
+	  </thead>
+
+	  <tbody>
+	  <% @cancelled_orders.each do |item| %>
+	 <tr>
+		<td><h6><%= item.customer.email %></h6></td>
+		<td><h6><strike><h5><%= link_to item.video.name, item.video %></strike></h5></td>
+		<td><h6><strike><h6><%= item.quantity %></strike></h6></td>
+		<td><h6><strike>$<%= item.total %></strike><h6></td>
+		<td><h6><strong>Cancelled.</strong></h6></td>
+	 <tr>
+	  <% end %>
+	<% end %>
+	</tbody>
+	</table>
+	<br/>
+	<%= will_paginate @cancelled_orders, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+	<strong><hr /></strong>
+  </div>
+</div>
+
+

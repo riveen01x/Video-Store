@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_10_114807) do
+ActiveRecord::Schema.define(version: 2022_03_23_101625) do
 
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
@@ -61,6 +61,18 @@ ActiveRecord::Schema.define(version: 2022_03_10_114807) do
     t.integer "video_id", null: false
     t.index ["actor_id", "video_id"], name: "index_actors_videos_on_actor_id_and_video_id"
     t.index ["video_id", "actor_id"], name: "index_actors_videos_on_video_id_and_actor_id"
+  end
+
+  create_table "cancelled_orders", force: :cascade do |t|
+    t.integer "cart_id"
+    t.integer "video_id"
+    t.decimal "total"
+    t.decimal "unit_price"
+    t.integer "customer_id"
+    t.integer "quantity"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "customer_email"
   end
 
   create_table "cart_items", force: :cascade do |t|
@@ -129,6 +141,23 @@ ActiveRecord::Schema.define(version: 2022_03_10_114807) do
     t.integer "quantity", default: 1
     t.index ["cart_id"], name: "index_line_items_on_cart_id"
     t.index ["video_id"], name: "index_line_items_on_video_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "actor_id"
+    t.string "notify_type", null: false
+    t.string "target_type"
+    t.bigint "target_id"
+    t.string "second_target_type"
+    t.bigint "second_target_id"
+    t.string "third_target_type"
+    t.bigint "third_target_id"
+    t.datetime "read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "notify_type"], name: "index_notifications_on_user_id_and_notify_type"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
   create_table "pay_charges", force: :cascade do |t|
@@ -255,6 +284,27 @@ ActiveRecord::Schema.define(version: 2022_03_10_114807) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "customer_id"
+  end
+
+  create_table "replies", force: :cascade do |t|
+    t.string "content"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "customer_id"
+    t.integer "user_id"
+    t.integer "review_id"
+    t.string "customer_email"
+    t.string "user_email"
+  end
+
+  create_table "reviews", force: :cascade do |t|
+    t.integer "rating"
+    t.text "comment"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "customer_id"
+    t.integer "video_id"
+    t.string "customer_email"
   end
 
   create_table "roles", force: :cascade do |t|

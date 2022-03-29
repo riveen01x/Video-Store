@@ -2,7 +2,7 @@
 <h1>Videos</h1>
 
 <%= form_with(url: '/videos', method: 'get', local: true) do %>
-  <%= text_field_tag 'search', nil, id: 'videos_search', autocomplete: :off, placeholder: "Search Videos.."  %>
+  <%= search_field_tag 'search', nil, id: 'videos_search', autocomplete: :off, placeholder: "Search Videos.."  %>
   <%= submit_tag("Search", class: "btn btn-outline-secondary") %>
   <%= link_to "Clear", root_path, class: "btn btn-outline-secondary" %>
 <% end %>
@@ -34,7 +34,7 @@
             <div class = "recipe">
               <div class="image-wrapper">
                 <%= link_to video do %>
-                  <%= image_tag(video.thumbnail, size: '310x285', class: "img-responsive") if video.thumbnail.present? %>
+                  <%= image_tag(video.thumbnail, size: '310x285', class: "img-responsive rounded") if video.thumbnail.present? %>
                 <% end %>
               </div>
 	      <div class="card-body">
@@ -43,11 +43,8 @@
              </div>
 
 	      <div class="card-footer">
-               <% if @cart.line_items.include?(video) %>
-                 <small><p>Video is in your cart!</p></small>
-                 <small class="text-muted"><strong><%= link_to 'Remove from cart <--', line_item, method: :delete, data: { confirm: "Are you sure? " } %></strong></small>
-               <% else %>
-                <small class="text-muted"><strong><%= button_to 'Add to cart -->', line_items_path(video_id: video.id) %></strong></small>
+                <% 5.times do %>
+                   <i class="bi bi-star-fill"></i>
                <% end %>
               </div>
               <br/>
@@ -65,15 +62,15 @@
 <%= will_paginate @videos, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
 </div><br />
  <div class="card-deck ">
-<h2>Recent Videos</h2>
+<h2>New Arrivals</h2>
        <div class="row row-cols-1 row-cols-md-3">
         <% @recent_videos.each do |video| %>
-          <% unless @cart.line_items.include?(video) %>
+          <% unless @cart.cart_items.include?(video) %>
            <div class="col mb-4">
             <div class = "recipe">
               <div class="image-wrapper">
                 <%= link_to video do %>
-                  <%= image_tag(video.thumbnail, size: '310x285', class: "img-responsive") if video.thumbnail.present? %>
+                  <%= image_tag(video.thumbnail, size: '310x285', class: "img-responsive rounded") if video.thumbnail.present? %>
                 <% end %>
               </div>
 	      <div class="card-body">
@@ -82,7 +79,7 @@
              </div>
 
 	      <div class="card-footer">
-               <% if @cart.line_items.include?(video) %>
+               <% if @cart.cart_items.include?(video) %>
                  <small><p>Video is in your cart!</p></small>
                  <small class="text-muted"><strong><%= link_to 'Remove from cart <--', line_item, method: :delete, data: { confirm: "Are you sure? " } %></strong></small>
                <% else %>

@@ -15,7 +15,7 @@
         <small><h4><strong>Subtotal: </strong>$<%= item.total %></h4></small>
 
 	<%= form_for item, remote: true do |f| %>
-		<%= link_to "Remove Item", rent_item_path(item), method: :delete, remote: true, class: "btn btn-outline-danger btn-sm" %>
+		<%= button_to "Remove Item", rent_item_path(item), method: :delete, remote: true, class: "btn btn-outline-danger btn-sm" %>
 	<% end %>
 
 	<br/><hr />

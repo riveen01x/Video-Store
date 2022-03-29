@@ -6,8 +6,9 @@
 
 <form action="/admin/users" method="GET">
   <input type="text" name="search_name" >
-  <input type="submit" value="Search for User">
+  <input type="submit" value="Search for User" class="btn btn-outline-secondary btn-sm" >
 </form>
+
 <br>
 
 <form action="/admin/users" method="GET">
@@ -24,8 +25,10 @@
       <% end %>
     </select>
   <% end %>
+<%= link_to "Clear all", clear_path, class: "btn btn-outline-secondary btn-sm" %>
 </form>
-<%= link_to "Clear Filter Options", clear_path %>
+<br />
+
 <table>
   <thead>
     <tr>

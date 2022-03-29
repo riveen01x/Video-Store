@@ -1,10 +1,19 @@
 <h1><%= link_to @actor.name, @actor %></h1><br>
 <h4>Appeared in: </h4>
-<div>
-  <span><%= render @actor.videos %></span><br/>
-
- <% if current_user && current_user.admin? %>
-    <%= link_to 'Edit', edit_actor_path(@actor) %> |
-    <%= link_to 'Back', actors_path %>
- <% end %>
+<% if @actor.videos.empty? %>
+  <h6>None</h6>
+<% else %>
+   <% @videos.each do |video| %>
+<div class="row justify-content-center">
+ <div class="col-10">
+      <h5><strong>- <%= link_to video.name, video %></strong><br/></h5>
+ </div>
 </div>
+   <% end %>
+<br/><hr />
+<% end %>
+ <% if current_user && current_user.admin? %>
+    <%= link_to 'Edit', edit_actor_path(@actor), class: "btn btn-secondary" %> |
+    <%= link_to 'Back', actors_path, class: "btn btn-secondary" %>
+ <% end %>
+

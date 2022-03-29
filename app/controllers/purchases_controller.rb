@@ -32,6 +32,18 @@ class PurchasesController < ApplicationController
   # @purchase_histories = @purchase_histories.search(params[:search]) 
   end
 
+  def orders
+   @choice = 4
+    handle_filters
+   if params[:filter]
+   	@finished_orders = PurchaseHistory.limit(params[:filter]).order(params[:sort])
+   else
+        @finished_orders = PurchaseHistory.limit(4).order(params[:sort])
+   end
+   @orders = CartItem.order(params[:sort]).paginate(page: params[:page], per_page: 4)
+   @cancelled_orders = CancelledOrder.order('created_at DESC').paginate(page: params[:page], per_page: 4)
+  end
+
  private
 
   def initialize_search
@@ -46,5 +58,11 @@ class PurchasesController < ApplicationController
     end
   end
 
+
+  def handle_filters
+    if session[:filter_option] && session[:filter] == "role"
+      @roles = @roles.where(id: session[:filter_option])
+    end
+   end
 
 end

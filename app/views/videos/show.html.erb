@@ -17,7 +17,7 @@
 
 <p>
   <strong>Actors:</strong>
-  <%= render @video.actors %>
+  <%= render @video.actors.order('name ASC') %>
 </p>
 
 <p>
@@ -26,41 +26,39 @@
 </p>
 
 <p>
-  <strong>Rent price:</strong>
-  $<%= @video.rent_price %>
-     |
-  <strong>Cart price:</strong>
+  <strong>Video price:</strong>
   $<%= @video.rent_price*2 %>
 </p>
 
 <% if customer_signed_in? %>
-<strong>Rent copies of: </strong>
-<table>
- <tr>
-   <% if @video.dvd_copies == 0 %>
-       <h5><strong><span class="badge bg-secondary">Out of DVD copies!</span></strong></h5> 
-   <% else %>
-       <%= button_to 'DVD', videos_rent_form_url(:video_id => @video.id, :category_id => @category_id = 1 ), method: :post, class: "btn btn-success btn-sm active" %> 
-   <% end %>
+	<strong>Rent copies of: </strong>
+	<table>
+	 <tr>
+	   <% if @video.dvd_copies == 0 %>
+	       <h5><strong><span class="badge bg-secondary">Out of DVD copies!</span></strong></h5> 
+	   <% else %>
+	       <%= button_to 'DVD', videos_rent_form_url(:video_id => @video.id, :category_id => @category_id = 1 ), method: :post, class: "btn btn-success btn-sm active" %> 
+	   <% end %>
 
-   <% if @video.vhs_copies == 0 %>
-       <h5><strong><span class="badge bg-secondary">Out of VHS copies!</span></strong></h5> 
-   <% else %>
-       | <%= button_to 'VHS', videos_rent_form_url(:video_id => @video.id, :category_id => @category_id = 2 ), method: :post, class: "btn btn-success btn-sm active" %>
-   <% end %>
+	   <% if @video.vhs_copies == 0 %>
+	       <h5><strong><span class="badge bg-secondary">Out of VHS copies!</span></strong></h5> 
+	   <% else %>
+	       | <%= button_to 'VHS', videos_rent_form_url(:video_id => @video.id, :category_id => @category_id = 2 ), method: :post, class: "btn btn-success btn-sm active" %>
+	   <% end %>
 
-   <% if @video.bluray_copies == 0 %>
-       <h5><strong><span class="badge bg-secondary">Out of BLU-RAY copies!</span></strong></h5> 
-   <% else %>
-       | <%= button_to 'BLU-RAY', videos_rent_form_url(:video_id => @video.id, :category_id => @category_id = 3 ), method: :post, class: "btn btn-success btn-sm active" %>
-   <% end %>
- </tr>
-</table>   --------        <strong>OR</strong>       --------
+	   <% if @video.bluray_copies == 0 %>
+	       <h5><strong><span class="badge bg-secondary">Out of BLU-RAY copies!</span></strong></h5> 
+	   <% else %>
+	       | <%= button_to 'BLU-RAY', videos_rent_form_url(:video_id => @video.id, :category_id => @category_id = 3 ), method: :post, class: "btn btn-success btn-sm active" %>
+	   <% end %>
+	 </tr>
+	</table>   --------        <strong>OR</strong>       --------
 <% else %>
-   <%= link_to 'Rent Now!', new_customer_session_path, class: "btn btn-success btn-lg active" %> <br/ >   --------        <strong>OR</strong>       --------
+        <%= link_to 'Rent Now!', new_customer_session_path, class: "btn btn-success btn-lg active" %> <br/ >   --------        <strong>OR</strong>       --------
 <% end %>
 
 <br/>
+
 <%= form_tag charges_path, id: 'chargeForm' do %>
     <script src="https://checkout.stripe.com/checkout.js"></script>
     <%= hidden_field_tag 'stripeToken'%>
@@ -68,7 +66,7 @@
     <%= hidden_field_tag 'amount', @video.rent_price*2*100 %>  
     <%= hidden_field_tag 'stripeEmail' %>
 	<% if customer_signed_in? %>
-	    <button id="btn-buy" type="button" class="btn btn-success btn-lg active"><span class="glyphicon glyphicon-ok"></span>Buy Now!</button>
+	    <button id="btn-buy" type="button" class="btn btn-success btn-lg active"><span class="glyphicon glyphicon-ok"></span>Buy Now!</button> | <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">Add to Cart</button>
 
 		<script>
 		   var handler = StripeCheckout.configure({
@@ -93,64 +91,65 @@
            <%= link_to 'Buy Now!', new_customer_session_path, class: "btn btn-success btn-lg active" %>
 	<% end %>
 <% end %>
-<% if @cart.line_items.include?(@video) %>
-                 <small><p>This Video is in your cart!</p></small>
-                 <small class="text-muted"><strong><% link_to 'Remove from cart <--', line_item, method: :delete, data: { confirm: "Are you sure? " } %></strong></small>
-  <% else %>
-                <small class="text-muted"><strong><% button_to 'Add to cart -->', line_items_path(video_id: @video), class: "btn btn-primary" %></strong></small>
-  <% end %>
 
-<% button_to 'Add to cart -->', line_items_path(video_id: @video) if customer_signed_in? %>
+<br/><br/>
+
+<% if customer_signed_in? %>
 
 
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+		<h5 class="modal-title" id="exampleModalLabel">Add Item/s</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		  <span aria-hidden="true">&times;</span>
+		</button>
+	      </div>
+	      <div class="modal-body">
+	       
+			<%= form_for @cart_item do |f| %>
+			  <%= f.hidden_field :customer_id, :value => current_customer.id unless !customer_signed_in? %>
+			  <%= f.hidden_field :video_id, :value => @video.id %>
+			  <% if @video.stock == 0 %>
+			    <% if @waitlist.nil? %>
+			       <h5><strong><span class="badge bg-secondary">Joined!</span></strong></h5> 
+			    <% else %>
+			       <h5><strong><span class="badge bg-secondary">Out of stock</span></strong></h5> 
+			       <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#exampleModalCenter">Email me when available</button>
+			    <% end %>
+			  <% else %>
+			     Qty: <%= f.number_field :quantity, :value => 1, :min => 1 , :max => @video.stock %><small> <%= pluralize( @video.stock , 'item') %> in stock.</small><br/><br/>
+			     <%= f.submit "Add to Cart ", class: "btn btn-primary" %>
+                	     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			  <% end %>
+			<% end %>
 
-
-
-
- <br/><br/>
-
-      <% if customer_signed_in? && @cart_items.include?(@video) %>
-         <h5>Items in your cart.</h5>
-     <% else %>
-        <p>
-          <strong>Video price:</strong>
-          $<%= @video.rent_price*2 %>
-        </p>
-
-	<%= form_for @cart_item do |f| %>
-	  <%= f.hidden_field :customer_id, :value => current_customer.id unless !customer_signed_in? %>
-	  <%= f.hidden_field :video_id, :value => @video.id %>
-          <% if @video.stock == 0 %>
-            <% if @waitlist.nil? %>
-               <h5><strong><span class="badge bg-secondary">Joined!</span></strong></h5> 
-            <% else %>
-               <h5><strong><span class="badge bg-secondary">Out of stock</span></strong></h5> 
-               <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#exampleModalCenter">Email me when available</button>
-            <% end %>
-          <% else %>
-	     Qty: <%= f.number_field :quantity, :value => 1, :min => 1 , :max => @video.stock %><small> <%= pluralize( @video.stock , 'item') %> in stock.</small><br/><br/>
-	     <%= f.submit "Add to Cart " %>
-          <% end %>
-        <% end %>
-     <% end %>
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="exampleModalLongTitle"><strong>Join Waitlist</strong></h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-
-    <%= form_for @waitlist do |f| %>
-      <div class="modal-body">
-   <% if flash[:error].present? %>
-        <div id="error_explanation">
-          <p><%= flash[:error] %></p>
-        </div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
     <% end %>
+
+
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+		<h4 class="modal-title" id="exampleModalLongTitle"><strong>Join Waitlist</strong></h4>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		  <span aria-hidden="true">&times;</span>
+		</button>
+	      </div>
+
+	    <%= form_for @waitlist do |f| %>
+	      <div class="modal-body">
+	   <% if flash[:error].present? %>
+		<div id="error_explanation">
+		  <p><%= flash[:error] %></p>
+		</div>
+           <% end %>
         <p>We will inform you when the item arrives in stock. Please leave your valid email address below.</p>
         <% if customer_signed_in? %> 
             <strong>Your Email: </strong><%= f.text_field :email, :value => @customer.email, disabled: "disabled", class: "form-control" %>
@@ -202,6 +201,48 @@
 <% if can? :destroy, @video %>
   <%= link_to 'Delete', @video, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-outline-danger btn-sm" %>
 <% end%>
+<br/>
+<h3>Reviews</h3>
+<br/>
+<br/>
+<% if @video.reviews.empty? %>
+  <h6><strong>Be the first to add a review.</strong></h6>
+<% else %>
+   <%= render @video.reviews.limit(4) %> 
+   <% if @video.reviews.count > 4 %>
+     <div class="col d-flex justify-content-center">
+        <%= link_to "See more reviews..", '' %>
+     </div>
+   <% end %>
 
-<br/><br/><br/>
+<% end %>
+<br/><hr />
+<div class="card border-light mb-3" style="max-width: 18rem;">
+  <div class="card-header"><strong>New Review</strong></div>
+  <div class="card-body">
+	<div>
+	<%= simple_form_for([@video, @video.reviews.build], remote: true) do |f| %>
+	   <div id="rating-form">
+	      <%= f.input :rating %>
+	   </div>
+	   <%= f.input :comment, placeholder: "Add description here.." %><br >
+	   <%= f.button :button, type: :submit %>
+	<% end %>
+	</div>
+  </div>
+</div>
+
+<br/>
 <%= link_to 'Back', videos_path, class: "btn btn-outline-secondary" %>
+
+<script>
+  $('.review-rating').raty({
+    size: 32,
+    path: '/javascript/packs',
+    readOnly: true,
+    score: function() {
+      return $(this).attr('data-score');
+    },
+    path: '/assets/'
+   });
+</script>

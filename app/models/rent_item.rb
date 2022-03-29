@@ -8,7 +8,7 @@ class RentItem < ApplicationRecord
 	before_save :set_unit_price
 	before_save :set_total
         
-
+        after_commit :create_notifications, on: :create
 
         validates :return_date, :presence => {message: 'Id number required'}
 
@@ -45,6 +45,15 @@ class RentItem < ApplicationRecord
 	def set_total
 		self[:total] = total
 	end
+
+        def create_notifications
+           Notification.create do |notification|
+             notification.notify_type = 'video'
+             notification.user = self.video.user
+             notification.target = self
+             notification.second_target = self.video
+           end
+        end
   
 
 end

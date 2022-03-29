@@ -59,6 +59,7 @@ class VideosController < ApplicationController
    @waitlists = Waitlist.all
    
    @waitlist = Waitlist.new
+
  
   end
 
@@ -109,7 +110,7 @@ class VideosController < ApplicationController
   def destroy
 
     @video = Video.find(params[:id])
-    @video.destroy
+    @video.delete
     redirect_to videos_url, notice: 'Video was successfully destroyed.'
   end
 
@@ -132,8 +133,12 @@ class VideosController < ApplicationController
     @categories = Category.all.map{ |c| [c.name, c.id] } 
    # @video.category_id = params[:category_id]
     @category_id = params[:category_id]
+    @category = Category.find(params[:category_id])
 
+  end
 
+  def index2
+    @videos = Video.order(params[:sort])
   end
 
   def clear_cart

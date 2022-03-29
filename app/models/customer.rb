@@ -11,6 +11,7 @@ class Customer < ApplicationRecord
   has_many :rent
   has_many :cart_items, dependent: :destroy
   has_many :purchase_histories
+  has_many :reviews
 
 
 end

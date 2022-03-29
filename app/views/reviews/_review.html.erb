@@ -1,0 +1,83 @@
+
+<div class="col d-flex justify-content-center">
+
+<div class="card" style="width: 60rem;">
+  <ul class="list-group list-group-flush">
+   <li class="list-group-item">
+<div class="review-rating" data-score="<%= review.rating %>"></div>
+<p><%= review.comment %></p>
+ 
+   <% if customer_signed_in? && review.customer_id == current_customer.id %>
+      <div class="row">
+        <small class="col-md-3 .ml-md-auto">By <strong>You</strong></small>
+	<%= link_to "Edit", edit_video_review_path(review.video, review), type: "button", class: "btn btn-light btn-sm" %>
+	<%= link_to "Delete", video_review_path(review.video, review), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-light btn-sm" %>
+        <small class="col-md-3 ml-md-auto"><small>Added <%= time_ago_in_words(review.created_at) %> ago.</small></small>
+       </div>    
+        <hr />    
+    <% else %>
+      <div class="row">
+        <small class="col">By <strong><%= review.customer_email %></strong></small>
+        <small class="col-md-3 ml-md-auto"><small>Added <%= time_ago_in_words(review.created_at) %> ago.</small></small>
+        <%= simple_form_for(Reply.new) do |f| %>
+		<div>
+		  <h7>Reply</h7>
+		      <%= f.text_area :content %>
+                      <%= f.hidden_field :review_id, value: review.id %>
+	              <%= f.hidden_field :customer_id, value: current_customer.id unless !customer_signed_in? %>
+        	      <%= f.hidden_field :user_id, value: current_user.id unless !user_signed_in? %>
+		      <%= button_tag type: 'submit', class: "button postfix" do %>
+                          <i class="fa fa-send-o" aria-hidden="true"></i>
+                      <% end %>
+		</div>
+        <% end %>
+      </div>    
+      <hr />
+    <% end %>
+    <details>
+      <summary>replies</summary>
+     <div class="col-md-8">
+      <% if review.replies.empty? %>
+        <small class="col">No replies yet.</small>
+      <% else %>
+        <% review.replies.each do |reply| %>
+        <hr />
+        <p><%= reply.content %></p>
+        <div class="row">
+            <% if !reply.customer_email.nil? %>
+               <small class="col">By <strong>
+                 <% if customer_signed_in? && reply.customer_email == current_customer.email %>
+		   <h7>You</h7>
+		   <div class="col d-flex justify-content-center">
+                       <%= link_to 'Undo', reply, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-light btn-sm" %>
+		   </div>
+                 <% else %>
+                   <%= reply.customer_email %>
+                 <% end %>
+               </strong></small>
+            <% elsif !reply.user_email.nil? %>
+               <small class="col">By <strong>
+                 <% if user_signed_in? && reply.user_email == current_user.email %>
+		   <h7>You</h7>
+		   <div class="col d-flex justify-content-center">
+                       <%= link_to 'Undo', reply, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-light btn-sm" %>
+		   </div>
+                 <% else %>
+                    <%= reply.user_email %>(admin)
+                 <% end %>
+                </strong></small>
+            <% end %>        
+         </div><hr />
+        <% end %>
+      <% end %>
+</div>
+    </details>
+    </li>
+  </ul>
+</div>
+</div>
+
+
+
+
+

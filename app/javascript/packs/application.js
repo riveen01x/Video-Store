@@ -4,24 +4,30 @@
 // that code so it'll be compiled.
 require("jquery")
 
-import Rails from "@rails/ujs"
 import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 import 'select2'
 import 'select2/dist/css/select2.css'
+import 'easy-autocomplete'
+
 
 require('../src/index');
+
+require('easy-autocomplete')
 
 require('./nested-forms/addFields')
 require('./nested-forms/removeFields')
 
-Rails.start()
+//Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
 
 require("trix")
 require("@rails/actiontext")
+
+
+import "trix/dist/trix.css"
 
 $(document).on("turbolinks:load", () => {
  $('.select2').select2();
@@ -29,3 +35,5 @@ $(document).on("turbolinks:load", () => {
 
 
 import "controllers"
+
+

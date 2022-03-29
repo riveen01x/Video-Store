@@ -20,6 +20,7 @@ gem 'cocoon', '~> 1.2', '>= 1.2.15'
 gem 'simple_form'
 gem 'bootsnap', '>= 1.4.4', require: false
 gem 'jquery-rails', '~> 4.4'
+gem 'jquery-ui-rails', '~> 6.0', '>= 6.0.1'
 gem 'sidekiq', '~> 6.4', '>= 6.4.1'
 gem 'wicked_pdf', '~> 2.1'
 gem 'wkhtmltopdf-binary', '~> 0.12.6.5'
@@ -36,7 +37,7 @@ gem 'receipts', '~> 1.1'
 gem 'faker', '~> 2.19'
 gem 'will_paginate', '~> 3.3', '>= 3.3.1'
 gem 'will_paginate-bootstrap4'
-
+gem "notifications", "~> 1.1"
 
 
 group :development, :test do
@@ -58,3 +59,5 @@ group :test do
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+
