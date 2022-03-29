@@ -34,12 +34,11 @@
       </div>    
       <hr />
     <% end %>
+<div class="card" style="width: 40rem;">
+  <% if !review.replies.empty? %>
     <details>
-      <summary>replies</summary>
+      <summary><em>replies ...</em></summary>
      <div class="col-md-8">
-      <% if review.replies.empty? %>
-        <small class="col">No replies yet.</small>
-      <% else %>
         <% review.replies.each do |reply| %>
         <hr />
         <p><%= reply.content %></p>
@@ -72,6 +71,7 @@
       <% end %>
 </div>
     </details>
+<div>
     </li>
   </ul>
 </div>

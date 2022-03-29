@@ -2,7 +2,7 @@
 <h1>Videos</h1>
 
 <%= form_with(url: '/videos', method: 'get', local: true) do %>
-  <%= search_field_tag 'search', nil, id: 'videos_search', autocomplete: :off, placeholder: "Search Videos.."  %>
+  <%= search_field_tag 'search', nil, id: 'videos_search', autocomplete: :off, placeholder: "Search Videos..", value: params[:search]  %>
   <%= submit_tag("Search", class: "btn btn-outline-secondary") %>
   <%= link_to "Clear", root_path, class: "btn btn-outline-secondary" %>
 <% end %>
@@ -23,8 +23,12 @@
   <% end %>
 </form>
 
-
-
+<% if params[:search].present? %>
+     <br />
+	<p>
+	  Your search for <strong>'<%= params[:search] %>'</strong> returned <%= pluralize(@videos.size, 'result') %>. 
+	</p>
+<% end %>
 <br/>
       <div class="card-deck ">
        <div class="row row-cols-1 row-cols-md-3">

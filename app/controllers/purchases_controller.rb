@@ -1,6 +1,6 @@
 class PurchasesController < ApplicationController
 
-  before_action :initialize_search
+  before_action :authenticate_user, only: :orders
 
   def show
     @purchase = Purchase.find_by_uuid(params[:id])
@@ -34,35 +34,48 @@ class PurchasesController < ApplicationController
 
   def orders
    @choice = 4
-    handle_filters
-   if params[:filter]
-   	@finished_orders = PurchaseHistory.limit(params[:filter]).order(params[:sort])
+
+  if params[:filter] && params[:option]
+      if params[:option].to_i == 0
+   	@finished_orders = PurchaseHistory.limit(params[:filter]).order('purchased_at ASC')
+      else
+        @finished_orders = PurchaseHistory.limit(params[:filter]).order('purchased_at DESC')
+      end
    else
-        @finished_orders = PurchaseHistory.limit(4).order(params[:sort])
+        @finished_orders = PurchaseHistory.limit(4).order('purchased_at DESC')
    end
-   @orders = CartItem.order(params[:sort]).paginate(page: params[:page], per_page: 4)
-   @cancelled_orders = CancelledOrder.order('created_at DESC').paginate(page: params[:page], per_page: 4)
+
+   if params[:filter2] && params[:option]
+      if params[:option].to_i == 0
+   	@orders = CartItem.limit(params[:filter2]).order('created_at ASC')
+      else
+        @orders = CartItem.limit(params[:filter2]).order('created_at DESC')
+      end
+   else
+        @orders = CartItem.limit(4).order('created_at DESC')
+   end
+
+
+   if params[:filter3] && params[:option]
+      if params[:option].to_i == 0
+   	@cancelled_orders = CancelledOrder.limit(params[:filter3]).order('created_at ASC')
+      else
+        @cancelled_orders = CancelledOrder.limit(params[:filter3]).order('created_at DESC')
+      end
+   else
+        @cancelled_orders = CancelledOrder.limit(4).order('created_at DESC')
+   end
+
   end
 
  private
 
-  def initialize_search
-    params[:search]
-  end
-
-  def handle_search_name
-    if params[:search]
-      @purchase_histories = current_customer.purchase_histories.where("name like ?", "%#{params[:search].titleize}%")
-    else
-       @purchase_histories = current_customer.purchase_histories.to_a
-    end
-  end
-
-
-  def handle_filters
-    if session[:filter_option] && session[:filter] == "role"
-      @roles = @roles.where(id: session[:filter_option])
-    end
+  def authenticate_user
+   if !user_signed_in? 
+    redirect_to videos_path
+    flash[:error] = "Restricted access!"
    end
+  end
+
 
 end
